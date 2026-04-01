@@ -2,7 +2,6 @@ package com.arteSul.pedidosystem.controller;
 
 
 import com.arteSul.pedidosystem.dto.PedidoDTO;
-import com.arteSul.pedidosystem.entity.Pedido;
 import com.arteSul.pedidosystem.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,26 +18,23 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping
-    public Pedido criar(@RequestBody @Valid PedidoDTO dto) {
+    public PedidoDTO criar(@RequestBody @Valid PedidoDTO dto) {
         return pedidoService.criarPedido(dto);
-
     }
 
     @GetMapping
-    private List<Pedido> listar() {
+    public List<PedidoDTO> listar() {
         return pedidoService.listarPedidos();
     }
 
     @GetMapping("/{id}")
-    public void buscar(@PathVariable Long id) {
-        return;
-
+    public PedidoDTO buscar(@PathVariable Long id) {
+        return pedidoService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public Pedido atualizar(@PathVariable Long id, @RequestBody PedidoDTO dto) {
+    public PedidoDTO atualizar(@PathVariable Long id, @RequestBody PedidoDTO dto) {
         return pedidoService.atualizarPedido(id, dto);
-
     }
 
     @DeleteMapping("/{id}")

@@ -3,6 +3,7 @@ package com.arteSul.pedidosystem.service;
 
 import com.arteSul.pedidosystem.dto.ProdutoDTO;
 import com.arteSul.pedidosystem.entity.Produto;
+import com.arteSul.pedidosystem.exception.ResourceNotFoundException;
 import com.arteSul.pedidosystem.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
             Produto produto = new Produto();
             produto.setNome(dto.getNome());
             produto.setTamanho(dto.getTamanho());
+            produto.setPreco(dto.getPreco());
             Produto salvo = produtoRepository.save(produto);
             dto.setId(salvo.getId());
             return dto;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
                         dto.setId(p.getId());
                         dto.setNome(p.getNome());
                         dto.setTamanho(p.getTamanho());
+                        dto.setPreco(p.getPreco());
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -43,7 +46,7 @@ import java.util.stream.Collectors;
         // DELETE
         public void deletar(Long id) {
             if (!produtoRepository.existsById(id)) {
-                throw new RuntimeException("Produto não encontrado!");
+                throw new ResourceNotFoundException("Produto não encontrado!");
             }
             produtoRepository.deleteById(id);
         }
@@ -51,21 +54,23 @@ import java.util.stream.Collectors;
         // BUSCAR POR ID
         public ProdutoDTO buscarPorId(Long id) {
             Produto produto = produtoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado!"));
             ProdutoDTO dto = new ProdutoDTO();
             dto.setId(produto.getId());
             dto.setNome(produto.getNome());
             dto.setTamanho(produto.getTamanho());
+            dto.setPreco(produto.getPreco());
             return dto;
         }
 
         // UPDATE
         public ProdutoDTO atualizar(Long id, ProdutoDTO dtoAtualizado) {
             Produto produto = produtoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado!"));
 
             produto.setNome(dtoAtualizado.getNome());
             produto.setTamanho(dtoAtualizado.getTamanho());
+            produto.setPreco(dtoAtualizado.getPreco());
 
             produtoRepository.save(produto);
 

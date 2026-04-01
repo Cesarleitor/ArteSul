@@ -1,15 +1,14 @@
 package com.arteSul.pedidosystem.service;
 
 import com.arteSul.pedidosystem.dto.PedidoDTO;
-import com.arteSul.pedidosystem.dto.PedidoItemDTO;
+import com.arteSul.pedidosystem.exception.BusinessException;
+import com.arteSul.pedidosystem.exception.ResourceNotFoundException;
 import com.arteSul.pedidosystem.entity.Pedido;
 import com.arteSul.pedidosystem.entity.PedidoItem;
 import com.arteSul.pedidosystem.entity.Produto;
 import com.arteSul.pedidosystem.repository.PedidoRepository;
 import com.arteSul.pedidosystem.repository.ProdutoRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,75 +22,109 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
 
+    private static final String PRODUTO_SEM_PRECO = "Produto sem preco cadastrado: ";
+
     // Criar pedido
-    public Pedido criarPedido(PedidoDTO dto) {
+    public PedidoDTO criarPedido(PedidoDTO dto) {
         Pedido pedido = new Pedido();
         pedido.setVendedorId(dto.getVendedorId());
-        pedido.setDataPedido(dto.getDataPedido() != null ? dto.getDataPedido() : java.time.LocalDateTime.now());
+        pedido.setDatePedido(dto.getDataPedido() != null ? dto.getDataPedido() : java.time.LocalDateTime.now());
 
         // Transformar DTOs de itens em entidades
         List<PedidoItem> itens = dto.getItens().stream().map(itemDTO -> {
             Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + itemDTO.getProdutoId()));
-            return new PedidoItem(produto, itemDTO.getQuantidade());
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado: " + itemDTO.getProdutoId()));
+            return criarItemPedido(produto, itemDTO.getQuantidade());
         }).collect(Collectors.toList());
 
         pedido.setItens(itens);
+        pedido.validarItens();
 
         // Calcula o total
         double total = itens.stream()
-                .mapToDouble(i -> {
-                    try {
-                        return Double.parseDouble(i.getProduto().getTamanho()) * i.getQuantidade(); // aqui "tamanho" como exemplo de preço
-                    } catch (NumberFormatException e) {
-                        return 0;
-                    }
-                })
+                .mapToDouble(PedidoItem::getSubtotal)
                 .sum();
         pedido.setTotal(total);
 
-        return pedidoRepository.save(pedido);
+        Pedido salvo = pedidoRepository.save(pedido);
+        return toDTO(salvo);
     }
 
-    public List<Pedido> listarPedidos() {
-        return pedidoRepository.findAll();
+    public List<PedidoDTO> listarPedidos() {
+        return pedidoRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
-    public Pedido buscarPorId(Long id) {
-        return pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+    public PedidoDTO buscarPorId(Long id) {
+        return toDTO(buscarEntidadePorId(id));
     }
 
-    public Pedido atualizarPedido(Long id, PedidoDTO dto) {
-        Pedido pedido = buscarPorId(id);
+    public PedidoDTO atualizarPedido(Long id, PedidoDTO dto) {
+        Pedido pedido = buscarEntidadePorId(id);
         pedido.setVendedorId(dto.getVendedorId());
+        pedido.setDatePedido(dto.getDataPedido() != null ? dto.getDataPedido() : pedido.getDatePedido());
 
         List<PedidoItem> itens = dto.getItens().stream().map(itemDTO -> {
             Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + itemDTO.getProdutoId()));
-            return new PedidoItem(produto, itemDTO.getQuantidade());
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado: " + itemDTO.getProdutoId()));
+            return criarItemPedido(produto, itemDTO.getQuantidade());
         }).collect(Collectors.toList());
 
         pedido.setItens(itens);
+        pedido.validarItens();
 
         double total = itens.stream()
-                .mapToDouble(i -> {
-                    try {
-                        return Double.parseDouble(i.getProduto().getTamanho()) * i.getQuantidade();
-                    } catch (NumberFormatException e) {
-                        return 0;
-                    }
-                })
+                .mapToDouble(PedidoItem::getSubtotal)
                 .sum();
         pedido.setTotal(total);
 
-        return pedidoRepository.save(pedido);
+        Pedido atualizado = pedidoRepository.save(pedido);
+        return toDTO(atualizado);
     }
 
     public void deletarPedido(Long id) {
         if (!pedidoRepository.existsById(id)) {
-            throw new RuntimeException("Pedido não encontrado!");
+            throw new ResourceNotFoundException("Pedido não encontrado!");
         }
         pedidoRepository.deleteById(id);
+    }
+
+    private Pedido buscarEntidadePorId(Long id) {
+        return pedidoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado!"));
+    }
+
+    private PedidoDTO toDTO(Pedido pedido) {
+        PedidoDTO dto = new PedidoDTO();
+        dto.setId(pedido.getId());
+        dto.setVendedorId(pedido.getVendedorId());
+        dto.setDataPedido(pedido.getDatePedido());
+        dto.setTotal(pedido.getTotal());
+        dto.setItens(pedido.getItens().stream()
+                .map(item -> new com.arteSul.pedidosystem.dto.PedidoItemDTO(
+                        item.getProduto().getId(),
+                        item.getProduto().getNome(),
+                        item.getQuantidade(),
+                        item.getPrecoUnitario(),
+                        item.getSubtotal()))
+                .collect(Collectors.toList()));
+        return dto;
+    }
+
+    private PedidoItem criarItemPedido(Produto produto, Double quantidade) {
+        PedidoItem item = new PedidoItem(produto, quantidade);
+        double precoUnitario = getPrecoObrigatorio(produto);
+        item.setPrecoUnitario(precoUnitario);
+        item.setSubtotal(precoUnitario * item.getQuantidade());
+        return item;
+    }
+
+    private double getPrecoObrigatorio(Produto produto) {
+        if (produto.getPreco() == null) {
+            throw new BusinessException(PRODUTO_SEM_PRECO + produto.getId());
+        }
+        return produto.getPreco();
     }
 }

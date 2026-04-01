@@ -1,5 +1,6 @@
 package com.arteSul.pedidosystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "pedidos")
 @Getter
 @Setter
 public class Pedido {
@@ -25,10 +27,24 @@ public class Pedido {
 
     private Double total;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItem> itens;
 
-
-    public void setDataPedido(LocalDateTime localDateTime) {
+    // Método auxiliar para garantir a quantidade mínima em todos os itens
+    public void validarItens(){
+        if (itens != null) {
+            for (PedidoItem item : itens) {
+                item.setPedido(this);
+                item.setQuantidade(item.getQuantidade());
+            }
+        }
     }
+
+
+
+
+
+
+
 }
