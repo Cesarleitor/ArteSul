@@ -6,43 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1fe2d865-5b04-4b95-bb02-525515425d0e" name="Changes" comment="Merge branch 'master' of https://github.com/Cesarleitor/Bamboo_Sul">
       <changelist_data name="Cesar Augusto" email="100009078+cesarleitor@users.noreply.github.com" automatic="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/PedidoSystemApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/config/ModelMapperConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/config/SwaggerConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/controller/AuthController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/controller/PedidoController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/controller/ProdutoController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/controller/UserController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/dto/AuthRequestDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/dto/PedidoDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/dto/PedidoItemDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/dto/ProdutoDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/entity/Pedido.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/entity/PedidoItem.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/entity/Produto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/entity/Role.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/entity/User.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/exception/BusinessException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/exception/ResourceNotFoundException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/repository/PedidoRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/repository/ProdutoRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/repository/UserRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/security/JwtFilter.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/security/JwtService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/security/SecurityConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/service/AuthService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/service/PedidoService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/service/ProdutoService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/arteSul/pedidosystem/service/UserService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
