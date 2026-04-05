@@ -87,12 +87,20 @@ src/main/java/com/empresa/pedidosystem
 git clone https://github.com/seu-usuario/pedido-system.git
 ```
 
-2. Configurar o banco no `application.properties`:
+2. Configurar o banco por variaveis de ambiente ou no `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pedido_system
-spring.datasource.username=root
-spring.datasource.password=SUA_SENHA
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/pedido_system}
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD:SUA_SENHA}
+```
+
+Exemplo no PowerShell:
+
+```powershell
+$env:DB_URL="jdbc:mysql://localhost:3306/pedido_system"
+$env:DB_USERNAME="Cesar"
+$env:DB_PASSWORD="SUA_SENHA"
 ```
 
 3. Rodar o projeto:

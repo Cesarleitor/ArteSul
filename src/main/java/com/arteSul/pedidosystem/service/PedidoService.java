@@ -9,9 +9,11 @@ import com.arteSul.pedidosystem.entity.Produto;
 import com.arteSul.pedidosystem.repository.PedidoRepository;
 import com.arteSul.pedidosystem.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
@@ -22,7 +24,7 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
 
-    private static final String PRODUTO_SEM_PRECO = "Produto sem preco cadastrado: ";
+    private static final String PRODUTO_SEM_PRECO = "Produto sem preço cadastrado: ";
 
     // Criar pedido
     public PedidoDTO criarPedido(PedidoDTO dto) {
@@ -31,23 +33,7 @@ public class PedidoService {
         pedido.setDatePedido(dto.getDataPedido() != null ? dto.getDataPedido() : java.time.LocalDateTime.now());
 
         // Transformar DTOs de itens em entidades
-        List<PedidoItem> itens = dto.getItens().stream().map(itemDTO -> {
-            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado: " + itemDTO.getProdutoId()));
-            return criarItemPedido(produto, itemDTO.getQuantidade());
-        }).collect(Collectors.toList());
-
-        pedido.setItens(itens);
-        pedido.validarItens();
-
-        // Calcula o total
-        double total = itens.stream()
-                .mapToDouble(PedidoItem::getSubtotal)
-                .sum();
-        pedido.setTotal(total);
-
-        Pedido salvo = pedidoRepository.save(pedido);
-        return toDTO(salvo);
+        return getPedidoDTO(dto, pedido);
     }
 
     public List<PedidoDTO> listarPedidos() {
@@ -66,13 +52,18 @@ public class PedidoService {
         pedido.setVendedorId(dto.getVendedorId());
         pedido.setDatePedido(dto.getDataPedido() != null ? dto.getDataPedido() : pedido.getDatePedido());
 
+        return getPedidoDTO(dto, pedido);
+    }
+
+    @NonNull
+    private PedidoDTO getPedidoDTO(PedidoDTO dto, Pedido pedido) {
         List<PedidoItem> itens = dto.getItens().stream().map(itemDTO -> {
             Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
                     .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado: " + itemDTO.getProdutoId()));
             return criarItemPedido(produto, itemDTO.getQuantidade());
         }).collect(Collectors.toList());
 
-        pedido.setItens(itens);
+        atualizarItensPedido(pedido, itens);
         pedido.validarItens();
 
         double total = itens.stream()
@@ -119,6 +110,15 @@ public class PedidoService {
         item.setPrecoUnitario(precoUnitario);
         item.setSubtotal(precoUnitario * item.getQuantidade());
         return item;
+    }
+
+    private void atualizarItensPedido(Pedido pedido, List<PedidoItem> novosItens) {
+        if (pedido.getItens() == null) {
+            pedido.setItens(new ArrayList<>());
+        } else {
+            pedido.getItens().clear();
+        }
+        pedido.getItens().addAll(novosItens);
     }
 
     private double getPrecoObrigatorio(Produto produto) {
