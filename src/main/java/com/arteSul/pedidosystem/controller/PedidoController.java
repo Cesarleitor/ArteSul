@@ -2,7 +2,9 @@ package com.arteSul.pedidosystem.controller;
 
 
 import com.arteSul.pedidosystem.dto.PedidoDTO;
+import com.arteSul.pedidosystem.dto.ProdutoDTO;
 import com.arteSul.pedidosystem.service.PedidoService;
+import com.arteSul.pedidosystem.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final ProdutoService produtoService;
 
     @PostMapping
     public PedidoDTO criar(@RequestBody @Valid PedidoDTO dto) {
@@ -41,6 +44,13 @@ public class PedidoController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         pedidoService.deletarPedido(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/lote")
+    public List<ProdutoDTO> salvarLote(@RequestBody List<ProdutoDTO> lista) {
+        return lista.stream()
+                .map(produtoService::salvar)
+                .toList();
     }
 
 

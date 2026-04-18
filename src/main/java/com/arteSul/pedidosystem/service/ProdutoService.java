@@ -77,6 +77,12 @@ import java.util.stream.Collectors;
             dtoAtualizado.setId(produto.getId());
             return dtoAtualizado;
         }
+
+        public List<ProdutoDTO> salvarLote(List<ProdutoDTO> lista) {
+            return lista.stream()
+                    .map(this::salvar)
+                    .toList();
+        }
     }
 
 

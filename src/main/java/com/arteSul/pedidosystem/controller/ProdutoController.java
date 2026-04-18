@@ -43,4 +43,9 @@ public class ProdutoController {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/lote")
+    public List<ProdutoDTO> salvarLote(@RequestBody List<ProdutoDTO> lista) {
+        return produtoService.salvarLote(lista);
+    }
 }

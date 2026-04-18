@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  db:
+    image: mysql:8
+    container_name: artesul-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: pedido_system
+      MYSQL_USER: Cesar
+      MYSQL_PASSWORD: Pietro@2026
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: artesul-app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      DB_URL: jdbc:mysql://db:3306/pedido_system
+      DB_USERNAME: Cesar
+      DB_PASSWORD: Pietro@2026
