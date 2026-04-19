@@ -84,15 +84,15 @@ src/main/java/com/empresa/pedidosystem
 1. Clonar o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/pedido-system.git
+git clone https://github.com/Cesarleitor/ArteSul.git
 ```
 
 2. Configurar o banco por variaveis de ambiente ou no `application.properties`:
 
 ```properties
-spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/pedido_system}
-spring.datasource.username=${DB_USERNAME:root}
-spring.datasource.password=${DB_PASSWORD:SUA_SENHA}
+spring.datasource.url=jdbc:mysql://artesul-mysql:3306/pedido_system
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
 ```
 
 Exemplo no PowerShell:
@@ -106,7 +106,7 @@ $env:DB_PASSWORD="SUA_SENHA"
 3. Rodar o projeto:
 
 ```bash
-./mvnw spring-boot:run
+docker compose up -d
 ```
 
 4. Acessar:
