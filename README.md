@@ -6,13 +6,13 @@ Sistema em desenvolvimento para gerenciamento de pedidos e catálogo de produtos
 
 ## 🚀 Tecnologias Utilizadas
 
-* ☕ Java 17
+* ☕ Java 21
 * 🚀 Spring Boot
 * 🌐 Spring Web
 * 🗄️ Spring Data JPA
 * 🔐 Spring Security *(em implementação)*
 * 🐬 MySQL
-* 🐳 Docker *(em breve)*
+* 🐳 Docker / Docker compose
 * ☁️ AWS *(em breve)*
 
 ---
