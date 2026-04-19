@@ -5,6 +5,10 @@ import com.arteSul.pedidosystem.dto.ProdutoDTO;
 import com.arteSul.pedidosystem.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +29,9 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<ProdutoDTO> listar() {
-        return produtoService.listar()
-                .stream()
-                .map(p -> new ProdutoDTO(p.getId(), p.getNome(), p.getTamanho(), p.getPreco()))
-                .toList();
+    public Page<ProdutoDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Pageable paginacaoFixa = PageRequest.of(pageable.getPageNumber(), 10, pageable.getSort());
+        return produtoService.listar(paginacaoFixa);
     }
 
     @PutMapping("/{id}")

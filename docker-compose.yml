@@ -29,5 +29,5 @@ services:
       - "8081:8080"
     environment:
       DB_URL: jdbc:mysql://db:3306/pedido_system
-      DB_USERNAME: Cesar
+      DB_USERNAME: cesar
       DB_PASSWORD: Pietro@2026

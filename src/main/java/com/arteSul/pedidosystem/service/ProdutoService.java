@@ -1,17 +1,17 @@
 package com.arteSul.pedidosystem.service;
 
-
+import org.springframework.data.domain.Page;
 import com.arteSul.pedidosystem.dto.ProdutoDTO;
 import com.arteSul.pedidosystem.entity.Produto;
 import com.arteSul.pedidosystem.exception.ResourceNotFoundException;
 import com.arteSul.pedidosystem.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-    @Service
+@Service
     @RequiredArgsConstructor
     public class ProdutoService {
 
@@ -29,19 +29,15 @@ import java.util.stream.Collectors;
         }
 
         // LIST
-        public List<ProdutoDTO> listar() {
-            return produtoRepository.findAll()
-                    .stream()
-                    .map(p -> {
-                        ProdutoDTO dto = new ProdutoDTO();
-                        dto.setId(p.getId());
-                        dto.setNome(p.getNome());
-                        dto.setTamanho(p.getTamanho());
-                        dto.setPreco(p.getPreco());
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-        }
+    public Page<ProdutoDTO> listar(Pageable pageable) {
+        return produtoRepository.findAll(pageable)
+                .map(p -> new ProdutoDTO(
+                        p.getId(),
+                        p.getNome(),
+                        p.getTamanho(),
+                        p.getPreco()
+                ));
+    }
 
         // DELETE
         public void deletar(Long id) {

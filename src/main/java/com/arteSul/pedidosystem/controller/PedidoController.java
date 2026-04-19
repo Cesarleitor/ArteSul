@@ -7,8 +7,11 @@ import com.arteSul.pedidosystem.service.PedidoService;
 import com.arteSul.pedidosystem.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -26,8 +29,8 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<PedidoDTO> listar() {
-        return pedidoService.listarPedidos();
+    public Page<PedidoDTO> listar(Pageable pageable) {
+        return pedidoService.listarPedidos(pageable);
     }
 
     @GetMapping("/{id}")

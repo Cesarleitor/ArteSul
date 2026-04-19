@@ -10,6 +10,8 @@ import com.arteSul.pedidosystem.repository.PedidoRepository;
 import com.arteSul.pedidosystem.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,11 +38,9 @@ public class PedidoService {
         return getPedidoDTO(dto, pedido);
     }
 
-    public List<PedidoDTO> listarPedidos() {
-        return pedidoRepository.findAll()
-                .stream()
-                .map(this::toDTO)
-                .toList();
+    public Page<PedidoDTO> listarPedidos(Pageable pageable) {
+        return pedidoRepository.findAll(pageable)
+                .map(this::toDTO);
     }
 
     public PedidoDTO buscarPorId(Long id) {
